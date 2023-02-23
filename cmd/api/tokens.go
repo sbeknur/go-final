@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/sbeknur/go-final/internal/data"
 	data "github.com/sbeknur/go-final/internal/data"
 	"github.com/sbeknur/go-final/internal/validator"
 )
