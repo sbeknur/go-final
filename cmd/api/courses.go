@@ -12,9 +12,9 @@ import (
 func (app *application) createCourseHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Title   string        `json:"title"`
-		Year    int32         `json:"year"`
+		Published_date    string         `json:"published_date"`
 		Runtime data.Runtime `json:"runtime"`
-		Genres  []string      `json:"genres"`
+		Lectures  []string      `json:"lectures"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -25,9 +25,9 @@ func (app *application) createCourseHandler(w http.ResponseWriter, r *http.Reque
 
 	course := &data.Course{
 		Title:   input.Title,
-		Year:    input.Year,
+		Published_date:    input.Published_date,
 		Runtime: input.Runtime,
-		Genres:  input.Genres,
+		Lectures:  input.Lectures,
 	}
 
 	v := validator.New()
@@ -96,9 +96,9 @@ func (app *application) updateCourseHandler(w http.ResponseWriter, r *http.Reque
 
 	var input struct {
 		Title   *string        `json:"title"`
-		Year    *int32         `json:"year"`
+		Published_date    *string        `json:"published_date"`
 		Runtime *data.Runtime `json:"runtime"`
-		Genres  []string       `json:"genres"`
+		Lectures  []string       `json:"lectures"`
 	}
 
 	err = app.readJSON(w, r, &input)
@@ -111,16 +111,16 @@ func (app *application) updateCourseHandler(w http.ResponseWriter, r *http.Reque
 		course.Title = *input.Title
 	}
 
-	if input.Year != nil {
-		course.Year = *input.Year
+	if input.Published_date != nil {
+		course.Published_date = *input.Published_date
 	}
 
 	if input.Runtime != nil {
 		course.Runtime = *input.Runtime
 	}
 
-	if input.Genres != nil {
-		course.Genres = input.Genres
+	if input.Lectures != nil {
+		course.Lectures = input.Lectures
 	}
 
 	v := validator.New()
@@ -174,7 +174,7 @@ func (app *application) deleteCourseHandler(w http.ResponseWriter, r *http.Reque
 func (app *application) listCoursesHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Title  string
-		Genres []string
+		Lectures []string
 		data.Filters
 	}
 
@@ -182,18 +182,18 @@ func (app *application) listCoursesHandler(w http.ResponseWriter, r *http.Reques
 	qs := r.URL.Query()
 
 	input.Title = app.readString(qs, "title", "")
-	input.Genres = app.readCSV(qs, "genres", []string{})
+	input.Lectures = app.readCSV(qs, "lectures", []string{})
 	input.Filters.Page = app.readInt(qs, "page", 1, v)
 	input.Filters.PageSize = app.readInt(qs, "page_size", 20, v)
 	input.Filters.Sort = app.readString(qs, "sort", "id")
-	input.Filters.SortSafeList = []string{"id", "title", "year", "runtime", "-id", "-title", "-year", "-runtime"}
+	input.Filters.SortSafeList = []string{"id", "title", "published_date", "runtime", "-id", "-title", "-published_date", "-runtime"}
 
 	if data.ValidateFilters(v, input.Filters); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
 
-	courses, metadata, err := app.models.Courses.GetAll(input.Title, input.Genres, input.Filters)
+	courses, metadata, err := app.models.Courses.GetAll(input.Title, input.Lectures, input.Filters)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return
