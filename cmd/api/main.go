@@ -54,7 +54,7 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
-	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:admin@localhost/greenlight?sslmode=disable", "PostgreSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:admin@localhost/go-final?sslmode=disable", "PostgreSQL DSN")
 
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
@@ -66,9 +66,9 @@ func main() {
 
 	flag.StringVar(&cfg.smtp.host, "smtp-host", "smtp.mailtrap.io", "SMTP host")
 	flag.IntVar(&cfg.smtp.port, "smpt-port", 25, "SMTP port")
-	flag.StringVar(&cfg.smtp.username, "smtp-username", "606d3447a7ec8e", "SMTP username")
-	flag.StringVar(&cfg.smtp.password, "smtp-password", "c000fc9663cf97", "SMTP password")
-	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "Greenlight <no-reply@greenlight.sbeknur.net>", "SMTP sender")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", "5da9936db8cbf5", "SMTP username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", "79d5aaf743c536", "SMTP password")
+	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "ProEdu <no-reply@go-final.sbeknur.net>", "SMTP sender")
 
 	flag.Parse()
 
