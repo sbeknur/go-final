@@ -18,9 +18,11 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v1/courses/:id", app.requireActivatedUser(app.updateCourseHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/courses/:id", app.requireActivatedUser(app.deleteCourseHandler))
 
-	router.HandlerFunc(http.MethodPost, "/v1/instructors", app.createInstructorHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/instructors", app.requireActivatedUser(app.createInstructorHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/instructors", app.listInstructorsHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/instructors/:id", app.showInstructorHandler)
+	router.HandlerFunc(http.MethodPatch, "/v1/instructors/:id", app.requireActivatedUser(app.updateInstructorHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/instructors/:id", app.requireActivatedUser(app.deleteInstructorHandler))
 
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.registerUserHandler)
 	router.HandlerFunc(http.MethodPut, "/v1/users/activated", app.activateUserHandler)
