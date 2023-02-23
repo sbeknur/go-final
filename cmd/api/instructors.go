@@ -67,6 +67,89 @@ func (app *application) showInstructorHandler(w http.ResponseWriter, r *http.Req
 	}
 }
 
+func (app *application) updateInstructorHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	instructor, err := app.models.Instructors.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrInvalidRuntimeFormat):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	var input struct {
+		FirstName *string `json:"first_name"`
+		LastName  *string `json:"last_name"`
+		Age       *int32  `json:"age"`
+	}
+
+	err = app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	if input.FirstName != nil {
+		instructor.FirstName = *input.FirstName
+	}
+
+	if input.LastName != nil {
+		instructor.LastName = *input.LastName
+	}
+
+	if input.Age != nil {
+		instructor.Age = *input.Age
+	}
+
+	err = app.models.Instructors.Update(instructor)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrEditConflict):
+			app.editConflictResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"instructor": instructor}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}
+
+func (app *application) deleteInstructorHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	err = app.models.Instructors.Delete(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "instructor successfully deleted"}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}
+
 func (app *application) listInstructorsHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		FirstName string

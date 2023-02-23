@@ -104,3 +104,58 @@ func (a InstructorsModel) GetAll(firstName string, lastName string, filters Filt
 	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
 	return instructors, metadata, nil
 }
+
+func (a InstructorsModel) Update(instructor *Instructors) error {
+	query :=
+		`UPDATE instructors
+		 SET first_name = $1, last_name = $2, age = $3
+		 WHERE id = $4`
+
+	args := []any{
+		&instructor.ID,
+		&instructor.FirstName,
+		&instructor.LastName,
+		&instructor.Age,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := a.DB.QueryRowContext(ctx, query, args...).Scan(&instructor.ID)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrEditConflict
+		default:
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (a InstructorsModel) Delete(id int64) error {
+	if id < 1 {
+		return ErrRecordNotFound
+	}
+	query := `DELETE FROM instructors WHERE id = $1`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	result, err := a.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrRecordNotFound
+	}
+
+	return nil
+}
