@@ -11,10 +11,10 @@ import (
 
 func (app *application) createCourseHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Title   string        `json:"title"`
-		Published_date    string         `json:"published_date"`
-		Runtime data.Runtime `json:"runtime"`
-		Lectures  []string      `json:"lectures"`
+		Title          string       `json:"title"`
+		Published_date string       `json:"published_date"`
+		Runtime        data.Runtime `json:"runtime"`
+		Lectures       []string     `json:"lectures"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -24,10 +24,10 @@ func (app *application) createCourseHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	course := &data.Course{
-		Title:   input.Title,
-		Published_date:    input.Published_date,
-		Runtime: input.Runtime,
-		Lectures:  input.Lectures,
+		Title:          input.Title,
+		Published_date: input.Published_date,
+		Runtime:        input.Runtime,
+		Lectures:       input.Lectures,
 	}
 
 	v := validator.New()
@@ -95,10 +95,10 @@ func (app *application) updateCourseHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	var input struct {
-		Title   *string        `json:"title"`
-		Published_date    *string        `json:"published_date"`
-		Runtime *data.Runtime `json:"runtime"`
-		Lectures  []string       `json:"lectures"`
+		Title          *string       `json:"title"`
+		Published_date *string       `json:"published_date"`
+		Runtime        *data.Runtime `json:"runtime"`
+		Lectures       []string      `json:"lectures"`
 	}
 
 	err = app.readJSON(w, r, &input)
@@ -173,7 +173,7 @@ func (app *application) deleteCourseHandler(w http.ResponseWriter, r *http.Reque
 
 func (app *application) listCoursesHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Title  string
+		Title    string
 		Lectures []string
 		data.Filters
 	}
