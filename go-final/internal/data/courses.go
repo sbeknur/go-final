@@ -12,13 +12,13 @@ import (
 )
 
 type Course struct {
-	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"-"`
-	Title     string    `json:"title"`
-	Published_date      string     `json:"published_date,omitempty"`
-	Runtime   Runtime   `json:"runtime,omitempty"`
-	Lectures    []string  `json:"lectures,omitempty"`
-	Version   int32     `json:"version"`
+	ID             int64     `json:"id"`
+	CreatedAt      time.Time `json:"-"`
+	Title          string    `json:"title"`
+	Published_date string    `json:"published_date,omitempty"`
+	Runtime        Runtime   `json:"runtime,omitempty"`
+	Lectures       []string  `json:"lectures,omitempty"`
+	Version        int32     `json:"version"`
 }
 
 type CourseModel struct {

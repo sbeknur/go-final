@@ -11,17 +11,17 @@ var (
 )
 
 type Models struct {
-	Courses CourseModel
+	Courses     CourseModel
 	Instructors InstructorsModel
-	Tokens TokenModel
-	Users  UserModel
+	Tokens      TokenModel
+	Users       UserModel
 }
 
 func NewModels(db *sql.DB) Models {
 	return Models{
-		Courses: CourseModel{DB: db},
+		Courses:     CourseModel{DB: db},
 		Instructors: InstructorsModel{DB: db},
-		Tokens: TokenModel{DB: db},
-		Users:  UserModel{DB: db},
+		Tokens:      TokenModel{DB: db},
+		Users:       UserModel{DB: db},
 	}
 }
